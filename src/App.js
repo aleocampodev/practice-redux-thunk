@@ -1,45 +1,87 @@
 /* eslint-disable */
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { loadData } from './actions/transactionsActions';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { connect } from "react-redux";
+import { setTransactions as setTransactionsActions } from "./actions/transactionsActions";
+import "./App.css";
+import axios from "axios";
 
-import './App.css'
-
-const formatDefault = (x) => x.toString()
+const formatDefault = (x) => x.toString();
 
 // sorting - tristate {unsorted,asc,desc}
-const [DIR_NONE,DIR_ASC,DIR_DESC] = [0,1,2];
-const sortDirClass = { 1:'sort_asc', 2:'sort_desc', 0:null }
+const [DIR_NONE, DIR_ASC, DIR_DESC] = [0, 1, 2];
+const sortDirClass = { 1: "sort_asc", 2: "sort_desc", 0: null };
 
-const cmpNoop = () => 0
+const cmpNoop = () => 0;
 
 // table layout
 const columns = [
-  { key:'date',        cmp:cmpNoop, format:formatDefault, classNames:[], label:'Date'},
-  { key:'check_no',    cmp:cmpNoop, format:formatDefault, classNames:[], label:'No.',},
-  { key:'debit',       cmp:cmpNoop, format:formatDefault, classNames:['currency'], label:'Debit',},
-  { key:'credit',      cmp:cmpNoop, format:formatDefault, classNames:['currency'], label:'Credit',},
-  { key:'balance',     cmp:cmpNoop, format:formatDefault, classNames:['currency', 'balance'], label:'Balance',},
-  { key:'description', cmp:cmpNoop, format:formatDefault, classNames:[], label:'Description',},
-  { key:'canceled',    cmp:cmpNoop, format:formatDefault, classNames:['canceledColumn'], label:'Canceled?',},
+  {
+    key: "date",
+    cmp: cmpNoop,
+    format: formatDefault,
+    classNames: [],
+    label: "Date",
+  },
+  {
+    key: "check_no",
+    cmp: cmpNoop,
+    format: formatDefault,
+    classNames: [],
+    label: "No.",
+  },
+  {
+    key: "debit",
+    cmp: cmpNoop,
+    format: formatDefault,
+    classNames: ["currency"],
+    label: "Debit",
+  },
+  {
+    key: "credit",
+    cmp: cmpNoop,
+    format: formatDefault,
+    classNames: ["currency"],
+    label: "Credit",
+  },
+  {
+    key: "balance",
+    cmp: cmpNoop,
+    format: formatDefault,
+    classNames: ["currency", "balance"],
+    label: "Balance",
+  },
+  {
+    key: "description",
+    cmp: cmpNoop,
+    format: formatDefault,
+    classNames: [],
+    label: "Description",
+  },
+  {
+    key: "canceled",
+    cmp: cmpNoop,
+    format: formatDefault,
+    classNames: ["canceledColumn"],
+    label: "Canceled?",
+  },
 ];
 
 function HeaderRow({ sortedField, toggleSort }) {
   return (
     <tr>
-      {columns.map( (col) =>
-        <th
-          key={col.key}
-          className={col.key}
-          >
-            <div className={'middleAlign'}>
-              {col.label}
-              <i className="material-icons" style={{ visibility: 'hidden' }}>arrow_drop_down</i>
-            </div>
-          </th>
-      )}
+      {columns.map((col) => (
+        <th key={col.key} className={col.key}>
+          <div className={"middleAlign"}>
+            {col.label}
+            <i className="material-icons" style={{ visibility: "hidden" }}>
+              arrow_drop_down
+            </i>
+          </div>
+        </th>
+      ))}
     </tr>
-  )
+  );
 }
 
 /*
@@ -56,20 +98,62 @@ The associated style sheet will render the checkbox nicely with the following:
 */
 
 // component to render the check book
-function App() {
+function App({ transactions, setTransactions }) {
   const [sortedField, setSortedField] = React.useState({});
-  const toggleSort= (key, cmp) => {};
+
+  const toggleSort = (key, cmp) => {};
 
   useEffect(() => {
-  }, [])
+    const fetchTransactions = async () => {
+      try {
+        const { data, status } = await axios.get(
+          "http://localhost:3001/transactions"
+        );
+        console.log(data);
+        setTransactions(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchTransactions();
+  }, []);
+
+  console.log(transactions.transactions[0], "tra");
 
   return (
-    <div className={'tableWrapper'}>
+    <div className={"tableWrapper"}>
       <table>
-        <thead><HeaderRow sortedField={sortedField} toggleSort={toggleSort}/></thead>
+        <thead>
+          <HeaderRow sortedField={sortedField} toggleSort={toggleSort} />
+        </thead>
+        <tbody>
+          {transactions.transactions[0] &&
+            transactions?.transactions[0].map((transaction) => (
+              <>
+                <tr key={transaction.description}>
+                  <td>{transaction.date}</td>
+                  <td>{transaction.check_no}</td>
+                  <td>{transaction.debit}</td>
+                  <td>{transaction.credit}</td>
+                  <td>{transaction.balance}</td>
+                  <td>{transaction.description}</td>
+                  <td>{transaction?.canceled}</td>
+                </tr>
+              </>
+            ))}
+        </tbody>
       </table>
     </div>
-  )
-};
+  );
+}
 
-export default App
+const mapStateToProps = (state) => ({
+  transactions: state,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  setTransactions: (value) => dispatch(setTransactionsActions(value)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

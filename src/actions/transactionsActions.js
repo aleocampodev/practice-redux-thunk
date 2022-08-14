@@ -1,5 +1,9 @@
-import transactionService from "../services/transactionService"
+//import transactionService from "../services/transactionService";
+import { SET_TRANSACTIONS } from "./types";
 
-export const loadData = () => {
-
-}
+export const setTransactions = (payload) => {
+  return {
+    type: SET_TRANSACTIONS,
+    payload,
+  };
+};
