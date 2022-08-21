@@ -5,7 +5,7 @@ const initialState = [];
 function transactionsReducer(state = initialState, action) {
   switch (action.type) {
     case SET_TRANSACTIONS:
-      return [...state, action.payload];
+      return action.payload.map((item) => item * item);
     default:
       return state;
   }
