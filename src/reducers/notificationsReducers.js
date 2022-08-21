@@ -1,16 +1,16 @@
-import { SHOW_NOTIFICATIONS } from "../actions/types";
+import { SHOW_NOTIFICATION } from "../actions/types";
 
 const initialState = {
-  message: "",
+  message: " ",
 };
 
-export const notificationsReducer = (state = initialState.message, action) => {
+export const notificationReducer = (state = initialState, action) => {
   switch (action.type) {
-    case SHOW_NOTIFICATIONS:
+    case SHOW_NOTIFICATION:
       return { ...state, message: action.payload };
     default:
       return state;
   }
 };
 
-export default notificationsReducer;
+export default notificationReducer;

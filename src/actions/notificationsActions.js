@@ -1,8 +1,8 @@
-import { SHOW_NOTIFICATIONS } from "./types";
+import { SHOW_NOTIFICATION } from "./types";
 
 export const setNotificationsActions = () => {
   return {
-    type: SHOW_NOTIFICATIONS,
+    type: SHOW_NOTIFICATION,
     payload: "Notificacion",
   };
 };
