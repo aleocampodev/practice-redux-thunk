@@ -4,7 +4,7 @@ const initialState = {
   message: "",
 };
 
-export const setNotifications = (state = initialState.message, action) => {
+export const notificationsReducer = (state = initialState.message, action) => {
   switch (action.type) {
     case SHOW_NOTIFICATIONS:
       return { ...state, message: action.payload };
@@ -12,3 +12,5 @@ export const setNotifications = (state = initialState.message, action) => {
       return state;
   }
 };
+
+export default notificationsReducer;

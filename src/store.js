@@ -7,12 +7,12 @@ import thunk from "redux-thunk";
 import transactionsReducer from "./reducers/transactionsReducer";
 import { combineReducers } from "redux";
 import reducerOcampo from "./reducers/reducerfantasy";
-import { setNotifications } from "./reducers/notificationsReducers";
+import notificationsReducer from "./reducers/notificationsReducers";
 
 const reducers = combineReducers({
   transactions: transactionsReducer,
   colors: reducerOcampo,
-  notifications: setNotifications,
+  notifications: notificationsReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
