@@ -119,13 +119,13 @@ function HeaderRow({ sortedField, toggleSort }) {
 // component to render the check book
 function AppView({ transactions, colors, setColors }) {
   const [sortedField, setSortedField] = React.useState({});
+  const dispatch = useDispatch();
 
   const toggleSort = (key, cmp) => {};
 
   useEffect(() => {
     setColors([]);
-
-    loadTransactions();
+    dispatch(loadTransactions());
   }, []);
 
   return (
@@ -152,7 +152,6 @@ function AppView({ transactions, colors, setColors }) {
         </tbody>
       </table>
       {JSON.stringify(transactions)}
-      <NotificationView />
     </div>
   );
 }
